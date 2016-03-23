@@ -1,35 +1,47 @@
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+import org.apache.commons.lang3.math.NumberUtils;
 
 public class memreader {
 
 	public static void main(String[] args) throws IOException {
-		File fileSrc = new File("/proc/2663/maps");
-		File fileDst = new File("./2663_maps");
 
-		FileInputStream in = null;
-		FileOutputStream out = null;
+		//getting the running container's id
+		HashMap<String,String> hMap = JsonWorker.getActiveContainers();
 
-		try {
-			in =  new FileInputStream(fileSrc);
-			out = new FileOutputStream(fileDst);
+		//getting the process IDs for the running conteiners
+		File[] directories = new File("/proc").listFiles(File::isDirectory);
 
-			// Transfer bytes from in to out
-			byte[] buf = new byte[1024];
-			int len;
+		for(File dir : directories) {
 
-			while ((len = in.read(buf)) > 0) {
-				out.write(buf, 0, len);
-			}
-		} finally {
-			if(in != null) {
-				in.close();
-			}
+			if(NumberUtils.isNumber(dir.getName())){
+				
+				Scanner scanner = new Scanner("/proc/" + dir.getName() + "/cgroup");
+				boolean found = false;				
 
-			if(out != null) {
-				out.close();
+				while( scanner.hasNextLine() && !found ){
+				
+					String line = scanner.nextLine();
+
+					//System.out.println(line);
+	
+					for(Map.Entry<String,String> entry : hMap.entrySet()){
+
+						if(line.indexOf(entry.getKey()) > 0){
+							System.out.println(dir.getName());
+							found = true;
+						}
+					}
+				}
+
+				scanner.close();
 			}
 		}
 	}

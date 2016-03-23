@@ -6,6 +6,7 @@ import javax.json.JsonValue;
 
 import java.net.*;
 import java.io.*;
+import java.util.HashMap;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -16,7 +17,8 @@ import org.apache.http.impl.client.HttpClientBuilder;
 
 public class JsonWorker {
 
-	public static void main(String[] args){
+	//starting the containers
+	public static void startContainers () {
 		
 		try {
 			URL url = new URL("http://localhost:2375/containers/json?all=1");
@@ -41,8 +43,7 @@ public class JsonWorker {
 				post.setHeader("Content-type", "application/json");
 				HttpResponse  response = httpClient.execute(post);
 
-				System.out.println("Conteiner ID : " + containerId);
-				System.out.println("Image Id : " + imageId);
+				System.out.println("Conteiner ID : " + containerId + " started");
 				System.out.println();
 
 			}
@@ -52,5 +53,43 @@ public class JsonWorker {
 		} catch (IOException e) {
 			System.out.println (e.getMessage());
 		}
+	}
+
+
+	//returning the list of active containers
+	public static HashMap<String,String> getActiveContainers(){
+		
+		try {
+			URL url = new URL("http://localhost:2375/containers/json");
+
+			InputStream is = url.openStream();
+			
+			//Reading Json from Docker
+        		JsonReader jsonReader = Json.createReader(is); 
+			JsonArray jsonArray = jsonReader.readArray();
+			jsonReader.close();
+        		is.close();
+
+			HashMap<String,String> hMap = new HashMap<String,String>();
+			
+			for (int i = 0; i < jsonArray.size(); i++) {
+
+				JsonObject container = jsonArray.getJsonObject(i);
+				
+				String containerId = container.getString("Id");
+				String imageId = container.getString("ImageID");
+
+				hMap.put(containerId, imageId);
+			}
+
+			return hMap;
+
+		} catch (MalformedURLException e) {
+			System.out.println (e.getMessage());
+		} catch (IOException e) {
+			System.out.println (e.getMessage());
+		}
+	
+		return new HashMap<String,String>();
 	}
 }
