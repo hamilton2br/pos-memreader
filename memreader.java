@@ -1,11 +1,13 @@
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -13,35 +15,32 @@ public class memreader {
 
 	public static void main(String[] args) throws IOException {
 
+		//starting the containers
+		JsonWorker.startContainers();
+
 		//getting the running container's id
 		HashMap<String,String> hMap = JsonWorker.getActiveContainers();
 
 		//getting the process IDs for the running conteiners
 		File[] directories = new File("/proc").listFiles(File::isDirectory);
 
-		for(File dir : directories) {
+		for(Map.Entry<String,String> entry : hMap.entrySet()){
 
-			if(NumberUtils.isNumber(dir.getName())){
+			for(File dir : directories) {
+
+				if(NumberUtils.isNumber(dir.getName())){
 				
-				Scanner scanner = new Scanner("/proc/" + dir.getName() + "/cgroup");
-				boolean found = false;				
+					String filename = "/proc/" + dir.getName() + "/cgroup";
+					
+					try(Stream<String> stream = Files.lines(Paths.get(filename))){
 
-				while( scanner.hasNextLine() && !found ){
-				
-					String line = scanner.nextLine();
-
-					//System.out.println(line);
-	
-					for(Map.Entry<String,String> entry : hMap.entrySet()){
-
-						if(line.indexOf(entry.getKey()) > 0){
+						if(stream.filter(line -> line.indexOf(entry.getKey()) > 0 ).findFirst().isPresent())
 							System.out.println(dir.getName());
-							found = true;
-						}
+
+					} catch (IOException e){
+						System.out.println(e.getMessage());
 					}
 				}
-
-				scanner.close();
 			}
 		}
 	}
