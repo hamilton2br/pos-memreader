@@ -92,4 +92,50 @@ public class ContainerUtil {
 	
 		return new HashMap<String,String>();
 	}
+
+	//pausing a container
+	public static void pauseContainer(String containerId){
+	
+		try {
+			URL url = new URL("http://localhost:2375/containers/" + containerId + "/pause");
+
+			HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+			httpConn.setRequestMethod("POST");
+			httpConn.setDoOutput(true);
+			
+			OutputStreamWriter osw = new OutputStreamWriter( httpConn.getOutputStream() );
+			osw.flush();
+
+			httpConn.getResponseCode();
+
+		
+		} catch (MalformedURLException e) {
+			System.out.println (e.getMessage());
+		} catch (IOException e) {
+			System.out.println (e.getMessage());
+		}
+	
+	}
+
+	//unpausing a container
+	public static void unpauseContainer(String containerId){
+
+		try{	
+			URL url = new URL("http://localhost:2375/containers/" + containerId + "/unpause");
+
+			HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+			httpConn.setRequestMethod("POST");
+			httpConn.setDoOutput(true);
+			
+			OutputStreamWriter osw = new OutputStreamWriter( httpConn.getOutputStream() );
+			osw.flush();
+
+			httpConn.getResponseCode();
+
+		} catch (MalformedURLException e) {
+			System.out.println (e.getMessage());
+		} catch (IOException e) {
+			System.out.println (e.getMessage());
+		}	
+	}
 }
