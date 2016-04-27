@@ -7,17 +7,23 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 import java.util.Collections;
 import java.util.Enumeration;
 
+import java.text.SimpleDateFormat;
+
 import org.apache.commons.lang3.math.NumberUtils;
 
 public class Memreader {
 
-	public static void main(String[] args) throws IOException {
+	public static void readMemory() {
+
+		//formating date output for filename
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy_hh_mm");
 
 		//getting the running container's id
 		HashMap<String,String> hMap = ContainerUtil.getActiveContainers();
@@ -43,7 +49,8 @@ public class Memreader {
 							String outFile = "./" + getMacAddress() + "-" + 
 										entry.getKey() + "-" + 
 										entry.getValue() + "-" + 
-										dir.getName() + ".mem";
+										dir.getName() + "-" + 
+										dateFormat.format(new Date()) + ".mem";
 
 							String fileSource = "/proc/" + dir.getName() + "/numa_maps";
 

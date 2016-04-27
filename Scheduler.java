@@ -14,13 +14,16 @@ public class Scheduler {
 		final ScheduledFuture<?> taskHandle = scheduler.scheduleAtFixedRate(
 			new Runnable() {
 				public void run() {
+					System.out.println(new Date());
+
 					//verifica se há shots maiores que 3 horas
 						//se tiver remove-os
-						System.out.println(new Date());
+
 					//roda o leitor de memória
+					Memreader.readMemory();
 				}
 			}
-		, 5, 5, TimeUnit.MINUTES);
+		, 0, 10, TimeUnit.MINUTES);
 	}
 
 	public static void main(String[] args) {
