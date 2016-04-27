@@ -15,12 +15,9 @@ import java.util.Enumeration;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
-public class memreader {
+public class Memreader {
 
 	public static void main(String[] args) throws IOException {
-
-		//starting the containers
-		ContainerUtil.startContainers();
 
 		//getting the running container's id
 		HashMap<String,String> hMap = ContainerUtil.getActiveContainers();
