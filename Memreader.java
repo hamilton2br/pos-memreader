@@ -46,8 +46,7 @@ public class Memreader {
 					try(Stream<String> stream = Files.lines(Paths.get(filename))){
 
 						if(stream.filter(line -> line.indexOf(entry.getKey()) > 0 ).findFirst().isPresent()){
-							String outFile = "./" + getMacAddress() + "-" + 
-										entry.getKey() + "-" + 
+							String outFile = "./" +	entry.getKey() + "-" + 
 										entry.getValue() + "-" + 
 										dir.getName() + "-" + 
 										dateFormat.format(new Date()) + ".mem";
