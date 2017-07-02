@@ -33,6 +33,9 @@ public class Memreader {
 
 		for(Map.Entry<String,String> entry : hMap.entrySet()){
 
+			//getting start time of mem copy
+			Date startDate = new Date();
+
 			//pausing the container to get its memory
 			ContainerUtil.pauseContainer( entry.getKey() );
 
@@ -65,6 +68,10 @@ public class Memreader {
 
 			//unpausing the container after memory collection
 			ContainerUtil.unpauseContainer( entry.getKey() );
+
+			//calculating total time for mem copy
+			long seconds = (new Date().getTime() - startDate.getTime());
+			System.out.println(" copy time: " + seconds);
 		}
 	}
 
