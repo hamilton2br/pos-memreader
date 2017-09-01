@@ -18,7 +18,7 @@ public class Scheduler {
 	//some constants
 	private static final int startInterval = 0;
 	private static final int interval = 1;
-	private static final int purgeTime = 60;
+	private static final int purgeTime = 5;
 	
 	//scheduler
 	private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);

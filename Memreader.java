@@ -53,6 +53,7 @@ public class Memreader {
 					try(Stream<String> stream = Files.lines(Paths.get(filename))){
 
 						if(stream.filter(line -> line.indexOf(entry.getKey()) > 0 ).findFirst().isPresent()){
+							//change this point to save file to a mapped directory
 							String outFile = "./" +	entry.getKey() + "-" + 
 										entry.getValue() + "-" + 
 										dir.getName() + "-" + 
