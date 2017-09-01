@@ -18,6 +18,10 @@ import java.text.SimpleDateFormat;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 public class Memreader {
 
 	public static void readMemory() {
@@ -115,6 +119,7 @@ public class Memreader {
 		try{
 			File infile =new File(fileSource);
 			File outfile =new File(outFile);
+			MessageDigest digest = MessageDigest.getInstance("SHA-256");
 
 			instream = new FileInputStream(infile);
 			outstream = new FileOutputStream(outfile);
@@ -125,13 +130,17 @@ public class Memreader {
 		
 			while ((length = instream.read(buffer)) > 0){
 				outstream.write(buffer, 0, length);
+				digest.update(buffer, 0, length);
 			}
+
+			byte[] hashedBytes = digest.digest();
+			outstream.write(hashedBytes, 0, hashedBytes.length);
 
 			//Closing the input/output file streams
 			instream.close();
 			outstream.close();
 
-		}catch(IOException e){
+		}catch(NoSuchAlgorithmException | IOException e){
 			System.out.println(e.getMessage());
 		}
 	}
