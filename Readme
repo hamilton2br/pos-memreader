@@ -1,0 +1,6 @@
+start - docker -H tcp://localhost:2375 run -it hamilton2br/injected
+build - docker -H tcp://0.0.0.0:2375 build --tag=hamilton2br/injected .
+remove container - docker -H tcp://0.0.0.0:2375 rm <conteiner_name>
+remove image - docker -H tcp://0.0.0.0:2375 rmi <image_name>
+rebuild conteiner from scratch - docker -H tcp://0.0.0.0:2375 build --no-cache --tag=hamilton2br/injected .
+all memory reading commands must be read with super user previledges

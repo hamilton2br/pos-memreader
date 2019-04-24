@@ -17,3 +17,4 @@ RUN gcc -o target ./target.c
 RUN gcc -Wall -O2 -fPIC -shared example.c -ldl -Wl,-soname,libexample.so -o libexample.so
 
 #CMD ["LD_PRELOAD=libexample.so target"]
+#CMD ["./target"]
