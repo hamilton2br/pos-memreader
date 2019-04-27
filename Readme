@@ -1,9 +1,25 @@
-start - docker -H tcp://localhost:2375 run -it hamilton2br/injected
-build - docker -H tcp://0.0.0.0:2375 build --tag=hamilton2br/injected .
-remove container - docker -H tcp://0.0.0.0:2375 rm <conteiner_name>
-remove image - docker -H tcp://0.0.0.0:2375 rmi <image_name>
-rebuild conteiner from scratch - docker -H tcp://0.0.0.0:2375 build --no-cache --tag=hamilton2br/injected .
-creating, starting and entering a conteiner docker -H tcp://0.0.0.0:2375 run -t -i hamilton2br/injected /bin/bash
-bypassing namespaces - sudo ./nsenter --target 6978 --mount --uts --ipc --net --pid
+========= start the container ========
+docker -H tcp://localhost:2375 run -it hamilton2br/injected
 
-all memory reading commands must be read with super user previledges
+========= build the container ========
+docker -H tcp://0.0.0.0:2375 build --tag=hamilton2br/injected .
+
+========= remove container ===========
+ docker -H tcp://0.0.0.0:2375 rm <conteiner_name>
+
+========= remove image ============== 
+docker -H tcp://0.0.0.0:2375 rmi <image_name>
+
+=== rebuild conteiner from scratch ==
+docker -H tcp://0.0.0.0:2375 build --no-cache --tag=hamilton2br/injected .
+
+= creating, starting and entering a conteiner =
+docker -H tcp://0.0.0.0:2375 run -t -i hamilton2br/injected /bin/bash
+
+= bypassing namespaces isolation ====
+sudo ./nsenter --target 6978 --mount --uts --ipc --net --pid
+
+-all memory reading commands must be executed with super user previledges
+
+===== when inside the container =====
+grep rw-p /proc/<pid>/maps | sed -n 's/^\([0-9a-f]*\)-\([0-9a-f]*\) .*$/\1 \2/p' | while read start stop; do gdb --batch --pid <pid> -ex "x/4096wx 0x$start"; done > <pid>.dump
